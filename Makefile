@@ -2,6 +2,7 @@ NAME = ft_shield
 
 ASM = nasm
 ASM_FLAGS = -f elf64 -g
+DEBUG_FLAGS = -F dwarf
 
 SOURCES = srcs/start.s \
 	srcs/ft_shield.s \
@@ -25,6 +26,14 @@ all: ${NAME}
 ${NAME}: ${OBJECTS}
 	${LINKER} ${LINK_FLAGS} -e ${ENTRY} -o ${NAME} ${OBJECTS}
 
+debug: ${NAME}
+
+%.o: %.s
+	${ASM} ${ASM_FLAGS} ${DEBUG_FLAGS} ${INCLUDES} $< -o $@
+
+${NAME}: ${OBJECTS}
+	${LINKER} ${LINK_FLAGS} -e ${ENTRY} -o ${NAME} ${OBJECTS}
+
 clean:
 	rm -f ${OBJECTS}
 
@@ -33,4 +42,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all debug clean fclean re
