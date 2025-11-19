@@ -26,7 +26,6 @@ section .text
     extern print_errno
 
 init_server:
-    mov qword[sockfd], 0
     call socket
     ;call setsockopt
     call bind
