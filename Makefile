@@ -6,7 +6,8 @@ ASM_FLAGS = -f elf64 -g
 SOURCES = srcs/start.s \
 	srcs/ft_shield.s \
 	srcs/lock.s \
-	srcs/syscall.s \
+	srcs/init_server.s \
+	srcs/run_server.s
 
 OBJECTS = ${SOURCES:.s=.o}
 
@@ -14,10 +15,11 @@ ENTRY = _start
 LINKER = ld
 LINK_FLAGS = -m elf_x86_64
 
+INCLUDES = -I includes/
 all: ${NAME}
 
 %.o: %.s
-	${ASM} ${ASM_FLAGS} $< -o $@
+	${ASM} ${ASM_FLAGS} ${INCLUDES} $< -o $@
 
 ${NAME}: ${OBJECTS}
 	${LINKER} ${LINK_FLAGS} -e ${ENTRY} -o ${NAME} ${OBJECTS}
