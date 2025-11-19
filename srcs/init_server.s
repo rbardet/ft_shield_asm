@@ -12,7 +12,7 @@ section .data
     SOCKET_ERR dd "Error while creating socket", 10
     SOCKET_ERR_LEN equ $ - SOCKET_ERR
     SETOPT_ERR dd "Error while setting socket option", 10
-    SETOPT_ERR_LEN dd $ - SETOPT_ERR
+    SETOPT_ERR_LEN equ $ - SETOPT_ERR
     BIND_ERR dd "Error while binding server", 10
     BIND_ERR_LEN equ $ - BIND_ERR
     LISTEN_ERR dd "Error while listening server", 10
@@ -27,6 +27,7 @@ section .text
 init_server:
     mov word[sockfd], 0
     call socket
+    call setsockopt
     call bind
     call listen
     ret
