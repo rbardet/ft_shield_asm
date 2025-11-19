@@ -1,6 +1,7 @@
 %ifndef FT_SHIELD_INC
 %define FT_SHIELD_INC
 
+%define SYS_READ 0
 %define SYS_WRITE 1
 %define SYS_OPEN 2
 %define SYS_CLOSE 3
@@ -39,14 +40,23 @@
 %define MAX_EVENT 10
 %define EPOLLIN 1
 %define EPOLL_CTL_ADD 1
+%define EPOLL_CTL_DEL 2
 %define TIMEOUT -1
 
 %define EPOLL_EVENT_SIZE 16
+%define BUFFER_SIZE 256
 
 %macro exit 1
     mov rax, SYS_EXIT
     mov rdi, %1
     syscall
+%endmacro
+
+%macro read 3
+    mov rax, SYS_WRITE
+    mov rdi, %1
+    mov rsi, %2
+    mov rdx, %3
 %endmacro
 
 %macro print 3
@@ -86,6 +96,7 @@ endstruc
 
 section .bss
     sockfd resq 1
+    userfd resq 1
     epollfd resq 1
     epoll resb EPOLL_EVENT_SIZE
     events resb EPOLL_EVENT_SIZE*10
