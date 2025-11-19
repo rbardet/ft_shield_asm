@@ -1,7 +1,7 @@
 %include "ft_shield.inc"
 
 section .data
-    NO_ROOT db "sudo right needed", 10
+    NO_ROOT dd "sudo right needed", 10
     NO_ROOT_LEN equ $ - NO_ROOT
 
 section .text
@@ -9,6 +9,7 @@ section .text
     extern create_lock
     extern existing_lock
     extern init_server
+    extern init_epoll
     extern run_server
 
 ft_shield:
@@ -19,6 +20,7 @@ ft_shield:
     call existing_lock
     call create_lock
     call init_server
+    call init_epoll
     call run_server
     ret
 .err_root:
