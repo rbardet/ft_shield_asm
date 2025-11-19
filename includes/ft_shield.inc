@@ -12,6 +12,9 @@
 %define SYS_EXIT 60
 %define SYS_FLOCK 73
 %define SYS_GETUID 102
+%define SYS_EPOLL_WAIT 232
+%define SYS_EPOLL_CTL 233
+%define SYS_EPOLL_CREATE1 291
 
 %define STD_OUT 1
 %define STD_ERR 2
@@ -30,6 +33,12 @@
 
 %define EXIT_SUCCESS 0
 %define EXIT_FAILURE 1
+
+%define MAX_EVENT 10
+%define EPOLLIN 1
+%define EPOLL_CTL_ADD 1
+
+%define EPOLL_EVENT_SIZE 16
 
 %macro exit 1
     mov rax, SYS_EXIT
@@ -59,7 +68,13 @@ struc sockaddr_in
     .sin_zero resb 8
 endstruc
 
+struc epoll_event
+    .events resd 1
+    .data resq 1
+endstruc
+
 section .bss
     sockfd resq 1
+    epollfd resq 1
 
 %endif

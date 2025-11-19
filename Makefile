@@ -7,6 +7,7 @@ SOURCES = srcs/start.s \
 	srcs/ft_shield.s \
 	srcs/lock.s \
 	srcs/init_server.s \
+	srcs/init_epoll.s \
 	srcs/run_server.s
 
 OBJECTS = ${SOURCES:.s=.o}
