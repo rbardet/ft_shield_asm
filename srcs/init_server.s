@@ -23,19 +23,14 @@ section .data
 
 section .text
     global init_server
+    extern print_errno
 
 init_server:
-    mov word[sockfd], 0
+    mov qword[sockfd], 0
     call socket
-    call setsockopt
+    ;call setsockopt
     call bind
     call listen
-    ret
-
-close_socket:
-    mov rax, SYS_CLOSE
-    mov rdi, [sockfd]
-    syscall
     ret
 
 socket:
@@ -57,17 +52,18 @@ setsockopt:
     mov rdi, [sockfd]
     mov rsi, SOL_SOCKET
     mov rdx, SO_REUSEADDR
-    mov r10, [opt]
-    mov r9, opt_len
+    lea r10, opt
+    mov r8, opt_len
     syscall
     cmp rax, 0
     jl .err_setopt
 .err_setopt:
-    call close_socket
     print STD_ERR, SETOPT_ERR, SETOPT_ERR_LEN
+    close_file [sockfd]
     exit EXIT_FAILURE
 
 bind:
+    mov rax, SYS_BIND
     mov rdi, [sockfd]
     mov rsi, addr
     mov rdx, addr_len
@@ -76,18 +72,19 @@ bind:
     jl .err_bind
     ret
 .err_bind:
-    call close_socket
+    close_file [sockfd]
     print STD_ERR, BIND_ERR, BIND_ERR_LEN
     exit EXIT_FAILURE
 
 listen:
     mov rax, SYS_LISTEN
+    mov rdi, [sockfd]
     mov rsi, MAX_USER
     syscall
     cmp rax, 0
     jl .err_listen
     ret
 .err_listen:
-    call close_socket
+    close_file [sockfd]
     print STD_ERR, LISTEN_ERR, LISTEN_ERR_LEN
-    exit EXIT_FAILURE
+    exit rbx

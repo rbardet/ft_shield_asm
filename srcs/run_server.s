@@ -6,4 +6,5 @@ section .text
     global run_server
 
 run_server:
+    jmp run_server
     ret
