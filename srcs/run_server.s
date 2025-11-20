@@ -14,6 +14,7 @@ section .data
 
 section .text
     global run_server
+    extern handle_input
 
 run_server:
 .server_loop:
@@ -46,6 +47,7 @@ run_server:
     mov r15, rax
     print STD_OUT, buff, r15
     pop r15
+    call handle_input
     jmp .handle_event
 .handle_user:
     mov r12, [usernb]
