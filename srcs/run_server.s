@@ -7,10 +7,6 @@ section .data
     ERR_EPCTL_LEN equ $ - ERR_EPCTL
     GOODBYE dd "Goodbye.", 10
     GOODBYE_LEN equ $ - GOODBYE
-    CC dd "Connected.", 10
-    CC_LEN equ $ - CC
-    RR dd "REFUSE.", 10
-    RR_LEN equ $ - RR
     HERE dd "HERE", 10
     HERE_LEN equ $ - HERE
     EP dd "EPOLL WAIT", 10
@@ -21,7 +17,6 @@ section .text
 
 run_server:
 .server_loop:
-    print 5, HERE, HERE_LEN
     print STD_OUT, EP, EP_LEN
     mov rax, SYS_EPOLL_WAIT
     mov rdi, r15
@@ -42,7 +37,6 @@ run_server:
     mov r12, r13 
     je .handle_user
 .read_input:
-    print STD_OUT, HERE, HERE_LEN
     read r13, buff, BUFFER_SIZE
     cmp rax, 0
     je .disconnect_user
@@ -59,7 +53,6 @@ run_server:
     je .refuse_user
     jmp .accept_user
 .accept_user:
-    print STD_OUT, CC, CC_LEN
     mov rax, SYS_ACCEPT
     mov rdi, rbx
     mov rsi, 0
@@ -78,7 +71,6 @@ run_server:
     inc byte [usernb]
     jmp .handle_event
 .refuse_user:
-    print STD_OUT, RR, RR_LEN
     mov rax, SYS_ACCEPT
     mov rdi, rbx
     mov rsi, 0
