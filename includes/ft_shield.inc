@@ -33,11 +33,12 @@
 %define INADDR_ANY 0
 %define SOL_SOCKET 1
 %define SO_REUSEADDR 2
+%define SOCK_NONBLOCK 2048
 
 %define EXIT_SUCCESS 0
 %define EXIT_FAILURE 1
 
-%define MAX_EVENT 10
+%define MAX_EVENT 1; because i suck
 %define EPOLLIN 1
 %define EPOLL_CTL_ADD 1
 %define EPOLL_CTL_DEL 2
@@ -53,7 +54,7 @@
 %endmacro
 
 %macro read 3
-    mov rax, SYS_WRITE
+    mov rax, SYS_READ
     mov rdi, %1
     mov rsi, %2
     mov rdx, %3
@@ -73,12 +74,19 @@
     syscall
 %endmacro
 
-%macro epoll_ctl 3
+%macro epoll_ctl 4
     mov rax, SYS_EPOLL_CTL
     mov rdi, %1
     mov rsi, %2
     mov rdx, %3
-    lea r10, epoll
+    lea r10, %4
+    syscall
+%endmacro
+
+%macro setnon_block 1
+    mov rax, SYS_FCNTL
+    mov rdi, %1
+    mov rsi, SOCK_NONBLOCK
     syscall
 %endmacro
 
@@ -98,7 +106,9 @@ section .bss
     sockfd resq 1
     userfd resq 1
     epollfd resq 1
-    epoll resb EPOLL_EVENT_SIZE
+    server_epoll resb EPOLL_EVENT_SIZE
+    user_epoll resb EPOLL_EVENT_SIZE
     events resb EPOLL_EVENT_SIZE*10
     usernb resb 1
+    buff resb BUFFER_SIZE + 1
 %endif
