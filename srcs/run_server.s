@@ -7,19 +7,22 @@ section .data
     ERR_EPCTL_LEN equ $ - ERR_EPCTL
     GOODBYE dd "Goodbye.", 10
     GOODBYE_LEN equ $ - GOODBYE
+    CC dd "Connected.", 10
+    CC_LEN equ $ - CC
+    RR dd "REFUSE.", 10
+    RR_LEN equ $ - RR
     HERE dd "HERE", 10
-    HERE_LEN equ $ - ERR_EPCTL
+    HERE_LEN equ $ - HERE
+    EP dd "EPOLL WAIT", 10
+    EP_LEN equ $ - EP
+
 section .text
     global run_server
 
-next_event:
-    mov rax, r14
-    imul rax, EPOLL_EVENT_SIZE
-    lea r13, [events + rax]
-    ret
-
 run_server:
 .server_loop:
+    print 5, HERE, HERE_LEN
+    print STD_OUT, EP, EP_LEN
     mov rax, SYS_EPOLL_WAIT
     mov rdi, r15
     lea rsi, [events]
@@ -29,31 +32,34 @@ run_server:
     cmp rax, 0
     jl .server_loop
     xor r14, r14
-    mov r11, [events + epoll_event.data]
+    mov r13, [events + epoll_event.data]
     mov rbp, rax
 .handle_event:
     cmp rbp, r14
     je .server_loop
-    call next_event
-    cmp [r13 + epoll_event.data], rbx
+    inc r14
+    cmp r13, rbx
+    mov r12, r13 
     je .handle_user
 .read_input:
-    read r13, rsi, BUFFER_SIZE
+    print STD_OUT, HERE, HERE_LEN
+    read r13, buff, BUFFER_SIZE
     cmp rax, 0
     je .disconnect_user
     jl .handle_event
-    print STD_OUT, rsi, BUFFER_SIZE
-    inc r14
+    mov byte[buff + rax], 0
+    push r15
+    mov r15, rax
+    print STD_OUT, buff, r15
+    pop r15
     jmp .handle_event
 .handle_user:
-    PUSH r12
     mov r12, [usernb]
     cmp r12, MAX_USER
-    POP r12
     je .refuse_user
     jmp .accept_user
 .accept_user:
-    print STD_OUT, HERE, HERE_LEN
+    print STD_OUT, CC, CC_LEN
     mov rax, SYS_ACCEPT
     mov rdi, rbx
     mov rsi, 0
@@ -62,14 +68,17 @@ run_server:
     cmp rax, 0
     jl .err_accept
     mov [userfd], rax
-    mov dword[epoll + epoll_event.events], EPOLLIN
-    mov qword[epoll + epoll_event.data], rax
-    epoll_ctl r15, EPOLL_CTL_ADD, [userfd]
+    setnon_block [userfd]
+    mov rax,[userfd]
+    mov dword[user_epoll + epoll_event.events], EPOLLIN
+    mov qword[user_epoll + epoll_event.data], rax
+    epoll_ctl r15, EPOLL_CTL_ADD, [userfd], [user_epoll]
     cmp rax, 0
     jl .err_epoll
     inc byte [usernb]
     jmp .handle_event
 .refuse_user:
+    print STD_OUT, RR, RR_LEN
     mov rax, SYS_ACCEPT
     mov rdi, rbx
     mov rsi, 0
@@ -84,12 +93,12 @@ run_server:
 .disconnect_user:
     print r13, GOODBYE, GOODBYE_LEN
     close_file r13
-    epoll_ctl r15, EPOLL_CTL_DEL, r13
+    epoll_ctl r15, EPOLL_CTL_DEL, r13, [server_epoll]
     dec byte [usernb]
     jmp .handle_event
 .err_epoll:
-    print r14, ERR_EPCTL, ERR_EPCTL_LEN
-    close_file r14
+    print [userfd], ERR_EPCTL, ERR_EPCTL_LEN
+    close_file [userfd]
     jmp .handle_event
 .err_accept:
     jmp .handle_event
