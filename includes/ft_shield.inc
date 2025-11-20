@@ -33,7 +33,8 @@
 %define INADDR_ANY 0
 %define SOL_SOCKET 1
 %define SO_REUSEADDR 2
-%define SOCK_NONBLOCK 2048
+%define O_NONBLOCK 2048
+%define F_SETFL 4
 
 %define EXIT_SUCCESS 0
 %define EXIT_FAILURE 1
@@ -86,7 +87,8 @@
 %macro setnon_block 1
     mov rax, SYS_FCNTL
     mov rdi, %1
-    mov rsi, SOCK_NONBLOCK
+    mov rsi, F_SETFL
+    mov rdx, O_NONBLOCK
     syscall
 %endmacro
 
