@@ -51,7 +51,7 @@ setsockopt:
     mov rdi, [sockfd]
     mov rsi, SOL_SOCKET
     mov rdx, SO_REUSEADDR
-    lea r10, opt
+    lea r10, [opt]
     mov r8, opt_len
     syscall
     cmp rax, 0

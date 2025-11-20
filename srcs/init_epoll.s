@@ -10,9 +10,9 @@ section .text
     global init_epoll
 
 init_epoll:
-    mov dword[epoll + epoll_event.events], EPOLLIN
+    mov dword[server_epoll + epoll_event.events], EPOLLIN
     mov rbx, rdi
-    mov qword[epoll + epoll_event.data], rbx
+    mov qword[server_epoll + epoll_event.data], rbx
 .create_epoll:
     mov rax, SYS_EPOLL_CREATE1
     mov rdi, 0
@@ -21,7 +21,7 @@ init_epoll:
     jl .err_epoll
     mov r15, rax
 .add_sockfd:
-    epoll_ctl r15, EPOLL_CTL_ADD, rbx
+    epoll_ctl r15, EPOLL_CTL_ADD, rbx, [server_epoll]
     cmp rax, 0
     jl .err_epoll_ctl
     ret
