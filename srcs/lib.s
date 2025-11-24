@@ -2,7 +2,7 @@ section .text
 	global ft_strcmp
 
 ft_strcmp:
-    push r15
+	push r15
 	XOR rax, rax
 	XOR r15, r15
 .loop:
@@ -18,5 +18,5 @@ ft_strcmp:
 	JMP .loop
 .return:
 	MOVSX rax, al
-    pop r15
+	pop r15
 	RET

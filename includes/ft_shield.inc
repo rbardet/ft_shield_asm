@@ -49,68 +49,68 @@
 %define BUFFER_SIZE 256
 
 %macro exit 1
-    mov rax, SYS_EXIT
-    mov rdi, %1
-    syscall
+	mov rax, SYS_EXIT
+	mov rdi, %1
+	syscall
 %endmacro
 
 %macro read 3
-    mov rax, SYS_READ
-    mov rdi, %1
-    mov rsi, %2
-    mov rdx, %3
+	mov rax, SYS_READ
+	mov rdi, %1
+	mov rsi, %2
+	mov rdx, %3
 %endmacro
 
 %macro print 3
-    mov rax, SYS_WRITE
-    mov rdi, %1
-    mov rsi, %2
-    mov rdx, %3
-    syscall
+	mov rax, SYS_WRITE
+	mov rdi, %1
+	mov rsi, %2
+	mov rdx, %3
+	syscall
 %endmacro
 
 %macro close_file 1
-    mov rax, SYS_CLOSE
-    mov rdi, %1
-    syscall
+	mov rax, SYS_CLOSE
+	mov rdi, %1
+	syscall
 %endmacro
 
 %macro epoll_ctl 4
-    mov rax, SYS_EPOLL_CTL
-    mov rdi, %1
-    mov rsi, %2
-    mov rdx, %3
-    lea r10, %4
-    syscall
+	mov rax, SYS_EPOLL_CTL
+	mov rdi, %1
+	mov rsi, %2
+	mov rdx, %3
+	lea r10, %4
+	syscall
 %endmacro
 
 %macro setnon_block 1
-    mov rax, SYS_FCNTL
-    mov rdi, %1
-    mov rsi, F_SETFL
-    mov rdx, O_NONBLOCK
-    syscall
+	mov rax, SYS_FCNTL
+	mov rdi, %1
+	mov rsi, F_SETFL
+	mov rdx, O_NONBLOCK
+	syscall
 %endmacro
 
 struc sockaddr_in
-    .sin_family resw 1
-    .sin_port resw 1
-    .sin_addr resd 1
-    .sin_zero resb 8
+	.sin_family resw 1
+	.sin_port resw 1
+	.sin_addr resd 1
+	.sin_zero resb 8
 endstruc
 
 struc epoll_event
-    .events resd 1
-    .data resq 1
+	.events resd 1
+	.data resq 1
 endstruc
 
 section .bss
-    sockfd resq 1
-    userfd resq 1
-    epollfd resq 1
-    server_epoll resb EPOLL_EVENT_SIZE
-    user_epoll resb EPOLL_EVENT_SIZE
-    events resb EPOLL_EVENT_SIZE*10
-    usernb resb 1
-    buff resb BUFFER_SIZE + 1
+	sockfd resq 1
+	userfd resq 1
+	epollfd resq 1
+	server_epoll resb EPOLL_EVENT_SIZE
+	user_epoll resb EPOLL_EVENT_SIZE
+	events resb EPOLL_EVENT_SIZE*10
+	usernb resb 1
+	buff resb BUFFER_SIZE + 1
 %endif
