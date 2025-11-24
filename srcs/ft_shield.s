@@ -1,7 +1,7 @@
 %include "ft_shield.inc"
 
 section .data
-	NO_ROOT dd "sudo right needed\n"
+	NO_ROOT dd "sudo right needed", 10
 	NO_ROOT_LEN equ $ - NO_ROOT
 
 section .text

@@ -5,9 +5,9 @@ section .data
 	HELP_CMD_LEN equ $ - HELP_CMD
 	SHELL_CMD dd "shell", 0
 	SHELL_CMD_LEN equ $ - SHELL_CMD
-	HELP dd "? show help\nshell Spawn remote shell on 4242\n"
+	HELP dd "? show help", 10, "shell Spawn remote shell on 4242", 10, 10
 	HELP_LEN equ $ - HELP
-	SHELL dd "Spawning shell on port 4242\n"
+	SHELL dd "Spawning shell on port 4242", 10
 	SHELL_LEN equ $ - SHELL
 
 section .text

@@ -1,9 +1,9 @@
 %include "ft_shield.inc"
 
 section .data
-	EPOLL_ERR dd "Error while creating epoll\n"
+	EPOLL_ERR dd "Error while creating epoll", 10
 	EPOLL_ERR_LEN equ $ - EPOLL_ERR
-	EPCTL_ERR dd "Eor while adding server to epoll\n"
+	EPCTL_ERR dd "Eor while adding server to epoll", 10
 	EPCTL_ERR_LEN equ $ - EPCTL_ERR
 
 section .text

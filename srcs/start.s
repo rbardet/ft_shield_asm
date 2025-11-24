@@ -1,7 +1,7 @@
 %include "ft_shield.inc"
 
 section .data
-	LOGIN dq "rbardet-\n"
+	LOGIN dq "rbardet-", 10
 	LOGIN_LEN equ $ - LOGIN
 
 section .text

@@ -1,15 +1,15 @@
 %include "ft_shield.inc"
 
 section .data
-	TOOMANY_USER dd "Error too many user, try later\n"
+	TOOMANY_USER dd "Error too many user, try later", 10
 	TOOMANY_USER_LEN equ $ - TOOMANY_USER
-	ERR_EPCTL dd "Error while connecting to server, try later\n"
+	ERR_EPCTL dd "Error while connecting to server, try later", 10
 	ERR_EPCTL_LEN equ $ - ERR_EPCTL
-	GOODBYE dd "Goodbye.\n"
+	GOODBYE dd "Goodbye.", 10
 	GOODBYE_LEN equ $ - GOODBYE
-	HERE dd "HERE\n"
+	HERE dd "HERE", 10
 	HERE_LEN equ $ - HERE
-	EP dd "EPOLL WAIT\n"
+	EP dd "EPOLL WAIT", 10
 	EP_LEN equ $ - EP
 
 section .text
@@ -64,7 +64,7 @@ run_server:
 	jl .err_accept
 	mov [userfd], rax
 	setnon_block [userfd]
-	mov rax, [userfd]
+	mov rax,[userfd]
 	mov dword[user_epoll + epoll_event.events], EPOLLIN
 	mov qword[user_epoll + epoll_event.data], rax
 	epoll_ctl r15, EPOLL_CTL_ADD, [userfd], [user_epoll]

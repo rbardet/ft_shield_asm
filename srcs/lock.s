@@ -5,7 +5,7 @@ section .bss
 
 section .data
 	LOCK_FILE dq "ft_shield.lock", 0
-	LOCK_ERROR dq "daemon already running\n"
+	LOCK_ERROR dq "daemon already running", 10
 	LOCK_ERROR_LEN equ $ - LOCK_ERROR
 
 section .text

@@ -9,13 +9,13 @@ section .data
 	iend
 	addr_len equ $ - addr
 
-	SOCKET_ERR dd "Error while creating socket\n"
+	SOCKET_ERR dd "Error while creating socket", 10
 	SOCKET_ERR_LEN equ $ - SOCKET_ERR
-	SETOPT_ERR dd "Error while setting socket option\n"
+	SETOPT_ERR dd "Error while setting socket option", 10
 	SETOPT_ERR_LEN equ $ - SETOPT_ERR
-	BIND_ERR dd "Error while binding server\n"
+	BIND_ERR dd "Error while binding server", 10
 	BIND_ERR_LEN equ $ - BIND_ERR
-	LISTEN_ERR dd "Error while listening server\n"
+	LISTEN_ERR dd "Error while listening server", 10
 	LISTEN_ERR_LEN equ $ - LISTEN_ERR
 
 	opt dd 1
